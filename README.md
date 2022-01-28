@@ -21,5 +21,10 @@ npm run build
 npm run lint
 ```
 
+# Start up testnet (ArLocal)
+```
+npx arlocal
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
