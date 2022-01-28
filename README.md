@@ -3,6 +3,7 @@
 ## Project setup
 ```
 npm install
+use "npm ci" for development !
 ```
 
 ### Compiles and hot-reloads for development
