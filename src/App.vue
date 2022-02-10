@@ -1,15 +1,21 @@
 <template>
   <div>
-    <BeatList />
+    <Header />
+    <router-view></router-view>
+    <Footer />
   </div>
 </template>
 
 <script>
-import BeatList from "./components/BeatList.vue";
+import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
-  components: { BeatList },
+  components: {
+    Header,
+    Footer,
+  },
   data() {
     return {};
   },
@@ -27,44 +33,19 @@ export default {
 body {
   font-family: "Poppins", sans-serif;
 }
-.container {
-  max-width: 600px;
-  margin: 30px auto;
-  overflow: auto;
-  min-height: 300px;
-  border: 1px solid steelblue;
-  padding: 30px;
-  border-radius: 5px;
+.sub_header {
+  display: flex;
+  align-items: flex-end;
 }
-.beatcontainer {
-  margin: 30px 30px auto;
-  overflow: auto;
-  min-height: 300px;
-  border: 1px solid steelblue;
-  padding: 30px;
-  border-radius: 5px;
+.title {
+  margin-left: 10px;
+  margin-right: 15px;
 }
-.btn {
-  display: inline-block;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 15px;
-  font-family: inherit;
+.about {
+  margin-bottom: 5px;
 }
-.btn:focus {
-  outline: none;
-}
-.btn:active {
-  transform: scale(0.98);
-}
-.btn-block {
-  display: block;
-  width: 100%;
+.login {
+  margin-right: 10px;
+  margin-bottom: 5px;
 }
 </style>

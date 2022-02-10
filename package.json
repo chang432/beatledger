@@ -12,10 +12,11 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "ardb": "^1.1.8",
-    "arlocal": "^1.1.19",
-    "arweave": "^1.10.23",
+    "arlocal": "https://github.com/textury/arlocal.git#fix-chunks",
+    "arweave": "^1.10.18",
     "core-js": "^3.6.5",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

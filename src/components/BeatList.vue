@@ -24,7 +24,7 @@
       <input type="submit" value="submit" />
     </form>
     <audio id="audio_player1" />
-    <button @click="test_txs_no_data">hmm</button>
+    <!-- <button @click="test_txs_arlocal">test tx with arlocal</button> -->
   </div>
 </template>
 
@@ -60,6 +60,7 @@ export default {
       return new Promise((resolve) => {
         arweave.transactions.getData(beat_id, { decode: true }).then((data) => {
           // data is Uint8Array
+          console.log("get tx beat id: " + beat_id);
           const blob = new Blob([data], {
             type: "audio/mpeg",
           });
@@ -95,12 +96,16 @@ export default {
         .then((new_beats) => {
           Promise.all(
             new_beats.map(async (obj) => {
+              console.log(obj);
               obj.blob = await this.getTxData(obj.tx_id);
               return obj;
             })
           ).then((new_beats) => {
             this.beats = new_beats;
           });
+          // .catch((error) => {
+          //   console.error(error);
+          // });
         });
 
       console.log("Website successfully refreshed");
@@ -155,7 +160,15 @@ export default {
         transaction.addTag("Note", note);
 
         await arweave.transactions.sign(transaction, wallet);
-        await arweave.transactions.post(transaction);
+
+        let uploader = await arweave.transactions.getUploader(transaction);
+
+        while (!uploader.isComplete) {
+          await uploader.uploadChunk();
+          console.log(
+            `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
+          );
+        }
 
         console.log("Tx successfully sent!");
       };
