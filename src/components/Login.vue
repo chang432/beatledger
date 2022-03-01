@@ -1,53 +1,130 @@
 <template>
-  <button @click="open = true">Open Modal</button>
+  <button @click="open = true" class="btn login_btn">Login</button>
 
   <Teleport to="body">
     <div v-if="open" class="login_div">
       <p class="text" style="margin-top: 20px">Upload Keyfile</p>
-      <!-- <hr class="break" /> -->
       <div class="key_file_div">
         <input type="file" id="key_file" accept=".json" />
       </div>
-      <!-- <break /> -->
-      <button @click="open = false" class="btn">Login</button>
+      <button @click="upload" class="btn popup_btn">Upload</button>
       <hr class="line_separator" />
-      <!-- <break /> -->
       <p class="text">Generate Keyfile</p>
-      <!-- <break /> -->
-      <button @click="generate" class="btn">Create Account</button>
+      <button @click="generate" class="btn popup_btn">Create</button>
     </div>
     <div v-if="open" class="outside_div" @click="open = false"></div>
   </Teleport>
 </template>
 
 <script>
+import Arweave from "arweave";
+
+// test gateway for Arlocal
+const arweave = Arweave.init({
+  host: "localhost",
+  port: 1984,
+  protocol: "http",
+});
+
 export default {
   name: "Login",
+  emits: ["updateUserKey"],
   data() {
     return {
       open: false,
     };
   },
   methods: {
-    login() {
-      // let file = document.getElementById("key_file").files[0];
-      console.log("login");
+    upload() {
+      let file = document.getElementById("key_file").files[0];
+      if (file != null) {
+        this.open = false;
+        console.log(file);
+        this.$emit("updateUserKey", file.name.split("-")[2]);
+      } else {
+        alert("Key File not Uploaded");
+      }
     },
-    generate() {
-      console.log("hello");
+    async generate() {
+      arweave.wallets.generate().then(async (key) => {
+        console.log(JSON.stringify(key));
+        var public_key = await arweave.wallets.getAddress(key);
+        var filename = "arweave-key-" + public_key + ".json";
+        var file = new Blob([JSON.stringify(key)], { type: JSON });
+        if (window.navigator.msSaveOrOpenBlob)
+          // IE10+
+          window.navigator.msSaveOrOpenBlob(file, filename);
+        else {
+          // Others
+          var a = document.createElement("a"),
+            url = URL.createObjectURL(file);
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 0);
+        }
+      });
     },
   },
 };
 </script>
 
 <style scoped>
+.line_separator {
+  width: 92%;
+  margin: 0px auto 20px;
+  height: 1px;
+  border: none;
+  background-color: #000;
+  border-color: #000;
+  display: block;
+}
+.key_file_div {
+  margin-left: 18%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.text {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.popup_btn {
+  margin: 0px auto 20px;
+  width: 30%;
+  padding: 8px 0px;
+}
+.login_btn {
+  padding: 6px 8px;
+  margin-right: 8px;
+}
+.btn {
+  display: block;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 12px;
+  font-family: inherit;
+}
+.btn:focus {
+  outline: none;
+}
+.btn:active {
+  transform: scale(0.98);
+}
 .outside_div {
   width: 100vw;
   height: 100vh;
   position: fixed;
   top: 0px;
   left: 0px;
-  z-index: -1;
+  z-index: 998;
 }
 .login_div {
   position: absolute;
@@ -69,43 +146,6 @@ export default {
 
   width: 400px;
   height: 300px;
-}
-.line_separator {
-  width: 92%;
-  margin: 0px auto 20px;
-  height: 1px;
-  border: none;
-  background-color: #000;
-  border-color: #000;
-  display: block;
-}
-.key_file_div {
-  margin-left: 18%;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.text {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.btn {
-  display: block;
-  width: 30%;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 8px 0px;
-  margin: 0px auto 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 12px;
-  font-family: inherit;
-}
-.btn:focus {
-  outline: none;
-}
-.btn:active {
-  transform: scale(0.98);
+  z-index: 999;
 }
 </style>

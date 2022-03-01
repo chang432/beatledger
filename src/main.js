@@ -11,9 +11,10 @@ import VueUniversalModal from 'vue-universal-modal'
 
 library.add(fas)
 
-createApp(App)
-  .component('fa', FontAwesomeIcon)
-  .use(router, VueUniversalModal, {
-    teleportTarget: '#modals'
-  })
-  .mount('#app')
+const app = createApp(App)
+
+app.component('fa', FontAwesomeIcon)
+app.use(router, VueUniversalModal, {
+  teleportTarget: '#modals'
+})
+app.mount('#app')
