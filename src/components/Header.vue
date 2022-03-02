@@ -6,8 +6,12 @@
     </div>
     <div class="sub_header">
       <template v-if="loggedIn">
-        <p class="beat_btn" id="createBeatBtn">Create Beat</p>
+        <!-- <p @click="createBeat" class="beat_btn" id="createBeatBtn">
+          Create Beat
+        </p> -->
+        <CreateBeat />
         <p class="btn" id="keyfileName">{{ publicKey }}</p>
+        <p @click="logout" class="beat_btn">Logout</p>
       </template>
       <Login v-else @updateUserKey="updateUK($event)" />
     </div>
@@ -16,6 +20,7 @@
 
 <script>
 import Login from "./Login.vue";
+import CreateBeat from "./CreateBeat.vue";
 
 export default {
   name: "Header",
@@ -23,18 +28,31 @@ export default {
   props: {},
   components: {
     Login,
+    CreateBeat,
   },
   data() {
     return {
       loggedIn: false,
-      publicKey: "hello",
+      publicKey: "",
     };
   },
   methods: {
     updateUK(userKey) {
       this.loggedIn = true;
       this.publicKey = userKey;
-      console.log("this better show correctly: " + userKey);
+    },
+    logout() {
+      console.log("hello?");
+      this.loggedIn = false;
+    },
+    createBeat() {
+      try {
+        if (this.publicKey == "") {
+          throw "No account found, not logged in!";
+        }
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 };
@@ -49,7 +67,7 @@ export default {
 }
 .sub_header {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
 }
 .btn {

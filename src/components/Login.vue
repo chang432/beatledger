@@ -17,15 +17,6 @@
 </template>
 
 <script>
-import Arweave from "arweave";
-
-// test gateway for Arlocal
-const arweave = Arweave.init({
-  host: "localhost",
-  port: 1984,
-  protocol: "http",
-});
-
 export default {
   name: "Login",
   emits: ["updateUserKey"],
@@ -46,9 +37,9 @@ export default {
       }
     },
     async generate() {
-      arweave.wallets.generate().then(async (key) => {
+      this.arweave.wallets.generate().then(async (key) => {
         console.log(JSON.stringify(key));
-        var public_key = await arweave.wallets.getAddress(key);
+        var public_key = await this.arweave.wallets.getAddress(key);
         var filename = "arweave-key-" + public_key + ".json";
         var file = new Blob([JSON.stringify(key)], { type: JSON });
         if (window.navigator.msSaveOrOpenBlob)
