@@ -4,7 +4,7 @@
       <h1 class="title">BEAT LEDGER</h1>
       <router-link to="/about" class="about">About</router-link>
     </div>
-    <div>
+    <div class="sub_header">
       <template v-if="loggedIn">
         <p class="beat_btn" id="createBeatBtn">Create Beat</p>
         <p class="btn" id="keyfileName">{{ publicKey }}</p>
@@ -42,16 +42,17 @@ export default {
 
 <style scoped>
 .header {
-  /* white-space: nowrap; */
-  /* overflow: hidden; */
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: blanchedalmond;
 }
+.sub_header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
 .btn {
-  display: block;
   background: #000;
   color: #fff;
   border: none;
@@ -67,7 +68,6 @@ export default {
   outline: none;
 }
 .beat_btn {
-  display: block;
   background: #000;
   color: #fff;
   border: none;
@@ -76,6 +76,9 @@ export default {
   text-decoration: none;
   font-size: 12px;
   font-family: inherit;
+
+  padding: 6px 8px;
+  margin-right: 8px;
 }
 .beat_btn:focus {
   outline: none;
