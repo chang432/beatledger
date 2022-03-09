@@ -30,8 +30,14 @@
 
 <script>
 import BeatModule from "./Beat";
-// import Arweave from "arweave";
+import Arweave from "arweave";
 import ArDB from "ardb";
+
+const ar = Arweave.init({
+  host: "localhost",
+  port: 1984,
+  protocol: "http",
+});
 
 export default {
   name: "BeatList",
@@ -41,7 +47,6 @@ export default {
       beats: [],
       beat_name: "",
       note: "",
-      mp3: "",
     };
   },
   components: {
@@ -50,16 +55,14 @@ export default {
   methods: {
     getTxData(beat_id) {
       return new Promise((resolve) => {
-        this.arweave.transactions
-          .getData(beat_id, { decode: true })
-          .then((data) => {
-            // data is Uint8Array
-            console.log("get tx beat id: " + beat_id);
-            const blob = new Blob([data], {
-              type: "audio/mpeg",
-            });
-            resolve(blob);
+        ar.transactions.getData(beat_id, { decode: true }).then((data) => {
+          // data is Uint8Array
+          console.log("get tx beat id: " + beat_id);
+          const blob = new Blob([data], {
+            type: "audio/mpeg",
           });
+          resolve(blob);
+        });
       });
     },
     refresh() {
@@ -137,14 +140,12 @@ export default {
         var arrayBuffer = fr.result;
         console.log(arrayBuffer);
 
-        var wallet = await this.arweave.wallets.generate();
+        var wallet = await ar.wallets.generate();
 
-        var walletAddress = await this.arweave.wallets.getAddress(wallet);
-        await this.arweave.api.get(
-          "mint/" + walletAddress + "/10000000000000000"
-        );
+        var walletAddress = await ar.wallets.getAddress(wallet);
+        await ar.api.get("mint/" + walletAddress + "/10000000000000000");
 
-        let transaction = await this.arweave.createTransaction(
+        let transaction = await ar.createTransaction(
           {
             data: arrayBuffer,
           },
@@ -155,9 +156,9 @@ export default {
         transaction.addTag("Name", beat_name);
         transaction.addTag("Note", note);
 
-        await this.arweave.transactions.sign(transaction, wallet);
+        await ar.transactions.sign(transaction, wallet);
 
-        let uploader = await this.arweave.transactions.getUploader(transaction);
+        let uploader = await ar.transactions.getUploader(transaction);
 
         while (!uploader.isComplete) {
           await uploader.uploadChunk();
@@ -207,7 +208,7 @@ export default {
     this.refresh();
   },
   created() {
-    this.ardb = new ArDB(this.arweave);
+    this.ardb = new ArDB(ar);
   },
 };
 </script>

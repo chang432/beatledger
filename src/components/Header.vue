@@ -6,14 +6,11 @@
     </div>
     <div class="sub_header">
       <template v-if="loggedIn">
-        <!-- <p @click="createBeat" class="beat_btn" id="createBeatBtn">
-          Create Beat
-        </p> -->
-        <CreateBeat />
-        <p class="btn" id="keyfileName">{{ publicKey }}</p>
+        <CreateBeat :keyFile="this.keyFile" />
+        <p class="btn" id="keyfileName">{{ this.keyFile.w_address }}</p>
         <p @click="logout" class="beat_btn">Logout</p>
       </template>
-      <Login v-else @updateUserKey="updateUK($event)" />
+      <Login v-else @updateUserWallet="updateUW" />
     </div>
   </div>
 </template>
@@ -24,7 +21,7 @@ import CreateBeat from "./CreateBeat.vue";
 
 export default {
   name: "Header",
-  emits: ["updateUserKey"],
+  emits: ["updateUserWallet"],
   props: {},
   components: {
     Login,
@@ -33,21 +30,22 @@ export default {
   data() {
     return {
       loggedIn: false,
-      publicKey: "",
+      keyFile: Object,
     };
   },
   methods: {
-    updateUK(userKey) {
+    updateUW(e) {
       this.loggedIn = true;
-      this.publicKey = userKey;
+      console.log(e);
+      this.keyFile.w_address = e.w_address;
+      this.keyFile.w_private_key = e.w_private_key;
     },
     logout() {
-      console.log("hello?");
       this.loggedIn = false;
     },
     createBeat() {
       try {
-        if (this.publicKey == "") {
+        if (this.keyFile[0] == "") {
           throw "No account found, not logged in!";
         }
       } catch (e) {

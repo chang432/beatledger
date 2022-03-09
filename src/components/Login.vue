@@ -17,12 +17,23 @@
 </template>
 
 <script>
+import Arweave from "arweave";
+const ar_two = Arweave.init({
+  host: "localhost",
+  port: 1984,
+  protocol: "http",
+});
+
 export default {
   name: "Login",
-  emits: ["updateUserKey"],
+  emits: ["updateUserWallet"],
   data() {
     return {
       open: false,
+      wallet: {
+        w_address: String,
+        w_private_key: Object,
+      },
     };
   },
   methods: {
@@ -30,16 +41,28 @@ export default {
       let file = document.getElementById("key_file").files[0];
       if (file != null) {
         this.open = false;
-        console.log(file);
-        this.$emit("updateUserKey", file.name.split("-")[2]);
+
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = async (f) => {
+          try {
+            var fileContent = JSON.parse(f.target.result);
+            var addy = await ar_two.wallets.getAddress(fileContent);
+            this.wallet.w_address = addy;
+            this.wallet.w_private_key = fileContent;
+            this.$emit("updateUserWallet", this.wallet);
+          } catch (err) {
+            console.error(err);
+          }
+        };
       } else {
         alert("Key File not Uploaded");
       }
     },
     async generate() {
-      this.arweave.wallets.generate().then(async (key) => {
+      ar_two.wallets.generate().then(async (key) => {
         console.log(JSON.stringify(key));
-        var public_key = await this.arweave.wallets.getAddress(key);
+        var public_key = await ar_two.wallets.getAddress(key);
         var filename = "arweave-key-" + public_key + ".json";
         var file = new Blob([JSON.stringify(key)], { type: JSON });
         if (window.navigator.msSaveOrOpenBlob)
