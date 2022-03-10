@@ -1,30 +1,30 @@
 <template>
   <button @click="test" class="btn beat_btn">Create Beat</button>
 
-  <!-- <Teleport to="body"> -->
-  <div v-if="open" class="beat_div">
-    <form @submit="sendTxWithText1">
-      <label for="fname">Beat Name</label>
-      <input type="text" v-model="beat_name" id="fname" name="firstname" />
+  <Teleport to="body">
+    <div v-if="open" class="beat_div">
+      <form @submit="sendTxWithText1">
+        <label for="fname">Beat Name</label>
+        <input type="text" v-model="beat_name" id="fname" name="firstname" />
 
-      <label for="lname">Note</label>
-      <input type="text" v-model="note" id="lname" name="lastname" />
+        <label for="lname">Note</label>
+        <input type="text" v-model="note" id="lname" name="lastname" />
 
-      <div>
-        <p style="display: inline-block">Mp3:</p>
-        <input
-          style="display: inline-block"
-          type="file"
-          id="real_audio_file"
-          accept="audio/*"
-        />
-      </div>
+        <div>
+          <p style="display: inline-block">Mp3:</p>
+          <input
+            style="display: inline-block"
+            type="file"
+            id="real_audio_file"
+            accept="audio/*"
+          />
+        </div>
 
-      <input type="submit" value="submit" />
-    </form>
-  </div>
-  <div v-if="open" class="outside_div" @click="open = false"></div>
-  <!-- </Teleport> -->
+        <input type="submit" value="submit" />
+      </form>
+    </div>
+    <div v-if="open" class="outside_div" @click="open = false"></div>
+  </Teleport>
 </template>
 
 <script>
@@ -60,6 +60,8 @@ export default {
       e.preventDefault();
       const publicKey = this.keyFile.w_address;
       const privateKey = this.keyFile.w_private_key;
+      const beat_name = this.beat_name;
+      const note = this.note;
 
       console.log(document.getElementById("real_audio_file").files);
       let real_file = document.getElementById("real_audio_file").files[0];
@@ -84,8 +86,8 @@ export default {
         );
         transaction.addTag("Content-Type", "text/mpeg");
         transaction.addTag("App-Name", "BeatLedger");
-        transaction.addTag("Name", this.beat_name);
-        transaction.addTag("Note", this.note);
+        transaction.addTag("Name", beat_name);
+        transaction.addTag("Note", note);
 
         await ar_one.transactions.sign(transaction, privateKey);
 
