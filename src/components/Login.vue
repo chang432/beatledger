@@ -26,14 +26,9 @@ const ar_two = Arweave.init({
 
 export default {
   name: "Login",
-  emits: ["updateUserWallet"],
   data() {
     return {
       open: false,
-      wallet: {
-        w_address: String,
-        w_private_key: Object,
-      },
     };
   },
   methods: {
@@ -48,9 +43,9 @@ export default {
           try {
             var fileContent = JSON.parse(f.target.result);
             var addy = await ar_two.wallets.getAddress(fileContent);
-            this.wallet.w_address = addy;
-            this.wallet.w_private_key = fileContent;
-            this.$emit("updateUserWallet", this.wallet);
+            this.$store.commit("setPublicKey", addy);
+            this.$store.commit("setPrivateKey", fileContent);
+            this.$store.commit("setIsLoggedIn", true);
           } catch (err) {
             console.error(err);
           }

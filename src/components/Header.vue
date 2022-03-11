@@ -5,12 +5,12 @@
       <router-link to="/about" class="about">About</router-link>
     </div>
     <div class="sub_header">
-      <template v-if="loggedIn">
-        <CreateBeat :keyFile="this.keyFile" />
-        <p class="btn" id="keyfileName">{{ this.keyFile.w_address }}</p>
+      <template v-if="isLoggedIn">
+        <CreateBeat />
+        <p class="btn" id="keyfileName">{{ w_public_key }}</p>
         <p @click="logout" class="beat_btn">Logout</p>
       </template>
-      <Login v-else @updateUserWallet="updateUW" />
+      <Login v-else />
     </div>
   </div>
 </template>
@@ -18,34 +18,22 @@
 <script>
 import Login from "./Login.vue";
 import CreateBeat from "./CreateBeat.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "Header",
-  emits: ["updateUserWallet"],
-  props: {},
   components: {
     Login,
     CreateBeat,
   },
-  data() {
-    return {
-      loggedIn: false,
-      keyFile: Object,
-    };
-  },
+  computed: mapState(["isLoggedIn", "w_public_key", "w_private_key"]),
   methods: {
-    updateUW(e) {
-      this.loggedIn = true;
-      console.log(e);
-      this.keyFile.w_address = e.w_address;
-      this.keyFile.w_private_key = e.w_private_key;
-    },
     logout() {
-      this.loggedIn = false;
+      this.$store.commit("setIsLoggedIn", false);
     },
     createBeat() {
       try {
-        if (this.keyFile[0] == "") {
+        if (this.w_public_key == "") {
           throw "No account found, not logged in!";
         }
       } catch (e) {

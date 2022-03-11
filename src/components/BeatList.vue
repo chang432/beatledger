@@ -57,7 +57,7 @@ export default {
       return new Promise((resolve) => {
         ar.transactions.getData(beat_id, { decode: true }).then((data) => {
           // data is Uint8Array
-          console.log("get tx beat id: " + beat_id);
+          // console.log("get tx beat id: " + beat_id);
           const blob = new Blob([data], {
             type: "audio/mpeg",
           });
@@ -93,7 +93,7 @@ export default {
         .then((new_beats) => {
           Promise.all(
             new_beats.map(async (obj) => {
-              console.log(obj);
+              // console.log(obj);
               obj.blob = await this.getTxData(obj.tx_id);
               return obj;
             })

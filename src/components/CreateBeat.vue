@@ -29,6 +29,7 @@
 
 <script>
 import Arweave from "arweave";
+import { mapState } from "vuex";
 
 const ar_one = Arweave.init({
   host: "localhost",
@@ -38,12 +39,6 @@ const ar_one = Arweave.init({
 
 export default {
   name: "CreateBeat",
-  props: {
-    keyFile: {
-      w_address: String,
-      w_private_key: Object,
-    },
-  },
   data() {
     return {
       open: false,
@@ -51,6 +46,7 @@ export default {
       note: "",
     };
   },
+  computed: mapState(["w_public_key", "w_private_key"]),
   methods: {
     async test(e) {
       e.preventDefault();
@@ -58,8 +54,8 @@ export default {
     },
     async sendTxWithText1(e) {
       e.preventDefault();
-      const publicKey = this.keyFile.w_address;
-      const privateKey = this.keyFile.w_private_key;
+      const publicKey = this.w_public_key;
+      const privateKey = this.w_private_key;
       const beat_name = this.beat_name;
       const note = this.note;
 

@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import 'vue-universal-modal/dist/index.css'
 import VueUniversalModal from 'vue-universal-modal'
 
+import store from './store/store.js'
+
 library.add(fas)
 
 const app = createApp(App)
@@ -16,4 +18,5 @@ app.component('fa', FontAwesomeIcon)
 app.use(router, VueUniversalModal, {
   teleportTarget: '#modals'
 })
+app.use(store)
 app.mount('#app')
