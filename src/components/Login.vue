@@ -31,6 +31,7 @@ export default {
       open: false,
     };
   },
+  emits: ["loginSuccessful"],
   methods: {
     upload() {
       let file = document.getElementById("key_file").files[0];
@@ -43,9 +44,13 @@ export default {
           try {
             var fileContent = JSON.parse(f.target.result);
             var addy = await ar_two.wallets.getAddress(fileContent);
-            this.$store.commit("setPublicKey", addy);
-            this.$store.commit("setPrivateKey", fileContent);
-            this.$store.commit("setIsLoggedIn", true);
+            // this.$store.commit("setPublicKey", addy);
+            // this.$store.commit("setPrivateKey", fileContent);
+            var kf = {
+              public_key: addy,
+              private_key: fileContent,
+            };
+            this.$emit("loginSuccessful", kf);
           } catch (err) {
             console.error(err);
           }

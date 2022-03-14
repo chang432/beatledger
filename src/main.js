@@ -10,6 +10,13 @@ import 'vue-universal-modal/dist/index.css'
 import VueUniversalModal from 'vue-universal-modal'
 
 import store from './store/store.js'
+import Storage from 'vue-ls';
+
+const storage_options = {
+  namespace: 'vuejs__', // key prefix
+  name: 'ls', // name variable Vue.[ls] or this.[$ls],
+  storage: 'session', // storage name session, local, memory
+};
 
 library.add(fas)
 
@@ -19,4 +26,5 @@ app.use(router, VueUniversalModal, {
   teleportTarget: '#modals'
 })
 app.use(store)
+app.use(Storage, storage_options);
 app.mount('#app')

@@ -5,12 +5,12 @@
       <router-link to="/about" class="about">About</router-link>
     </div>
     <div class="sub_header">
-      <template v-if="isLoggedIn">
-        <CreateBeat />
-        <p class="btn" id="keyfileName">{{ w_public_key }}</p>
+      <template v-if="isLoggedInValue">
+        <CreateBeat :keyFile="keyFile" />
+        <p class="btn" id="keyfileName">{{ keyFile.public_key }}</p>
         <p @click="logout" class="beat_btn">Logout</p>
       </template>
-      <Login v-else />
+      <Login @login-successful="loginSuccessful" v-else />
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@
 <script>
 import Login from "./Login.vue";
 import CreateBeat from "./CreateBeat.vue";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 
 export default {
   name: "Header",
@@ -26,19 +26,53 @@ export default {
     Login,
     CreateBeat,
   },
-  computed: mapState(["isLoggedIn", "w_public_key", "w_private_key"]),
+  data() {
+    return {
+      isLoggedInValue: this.$ls.get("isLoggedIn", false),
+      keyFileValue: this.$ls.get("keyFile", {
+        public_key: "",
+        private_key: Object,
+      }),
+    };
+  },
+  computed: {
+    // ...mapState(["w_public_key", "w_private_key"]),
+    isLoggedIn: {
+      get: function () {
+        return this.isLoggedInValue;
+      },
+      set: function (boolVal) {
+        this.isLoggedInValue = boolVal;
+        this.$ls.set("isLoggedIn", boolVal);
+      },
+    },
+    keyFile: {
+      get: function () {
+        return this.keyFileValue;
+      },
+      set: function (newKeyFile) {
+        this.keyFileValue = newKeyFile;
+        this.$ls.set("keyFile", newKeyFile);
+      },
+    },
+  },
   methods: {
     logout() {
-      this.$store.commit("setIsLoggedIn", false);
+      this.isLoggedIn = false;
     },
     createBeat() {
       try {
-        if (this.w_public_key == "") {
+        if (this.keyFileValue.public_key == "") {
           throw "No account found, not logged in!";
         }
       } catch (e) {
         console.error(e);
+        this.keyFile = e;
       }
+    },
+    loginSuccessful(e) {
+      this.isLoggedIn = true;
+      this.keyFile = e;
     },
   },
 };

@@ -1,35 +1,36 @@
 <template>
-  <button @click="test" class="btn beat_btn">Create Beat</button>
+  <div>
+    <button @click="test" class="btn beat_btn">Create Beat</button>
 
-  <Teleport to="body">
-    <div v-if="open" class="beat_div">
-      <form @submit="sendTxWithText1">
-        <label for="fname">Beat Name</label>
-        <input type="text" v-model="beat_name" id="fname" name="firstname" />
+    <Teleport to="body">
+      <div v-if="open" class="beat_div">
+        <form @submit="sendTxWithText1">
+          <label for="fname">Beat Name</label>
+          <input type="text" v-model="beat_name" id="fname" name="firstname" />
 
-        <label for="lname">Note</label>
-        <input type="text" v-model="note" id="lname" name="lastname" />
+          <label for="lname">Note</label>
+          <input type="text" v-model="note" id="lname" name="lastname" />
 
-        <div>
-          <p style="display: inline-block">Mp3:</p>
-          <input
-            style="display: inline-block"
-            type="file"
-            id="real_audio_file"
-            accept="audio/*"
-          />
-        </div>
+          <div>
+            <p style="display: inline-block">Mp3:</p>
+            <input
+              style="display: inline-block"
+              type="file"
+              id="real_audio_file"
+              accept="audio/*"
+            />
+          </div>
 
-        <input type="submit" value="submit" />
-      </form>
-    </div>
-    <div v-if="open" class="outside_div" @click="open = false"></div>
-  </Teleport>
+          <input type="submit" value="submit" />
+        </form>
+      </div>
+      <div v-if="open" class="outside_div" @click="open = false"></div>
+    </Teleport>
+  </div>
 </template>
 
 <script>
 import Arweave from "arweave";
-import { mapState } from "vuex";
 
 const ar_one = Arweave.init({
   host: "localhost",
@@ -46,7 +47,9 @@ export default {
       note: "",
     };
   },
-  computed: mapState(["w_public_key", "w_private_key"]),
+  props: {
+    keyFile: Object,
+  },
   methods: {
     async test(e) {
       e.preventDefault();
@@ -54,8 +57,9 @@ export default {
     },
     async sendTxWithText1(e) {
       e.preventDefault();
-      const publicKey = this.w_public_key;
-      const privateKey = this.w_private_key;
+
+      const publicKey = this.keyFile.public_key;
+      const privateKey = this.keyFile.private_key;
       const beat_name = this.beat_name;
       const note = this.note;
 
@@ -68,9 +72,6 @@ export default {
         var arrayBufferOne = frr.result;
 
         var walletAddress = publicKey;
-        console.log("wallet address: " + walletAddress);
-        console.log("private key: " + privateKey);
-        // var walletAddress = "COXrqeUGtPaDUZIeTCwuG6jH7F6jw8trS9bgNhtb2-k";
 
         await ar_one.api.get("mint/" + walletAddress + "/10000000000000000");
 
