@@ -4,7 +4,7 @@
 
     <Teleport to="body">
       <div v-if="open" class="beat_div">
-        <form @submit="sendTxWithText1">
+        <form @submit="sendTxWithText">
           <label for="fname">Beat Name</label>
           <input type="text" v-model="beat_name" id="fname" name="firstname" />
 
@@ -27,16 +27,10 @@
       <div v-if="open" class="outside_div" @click="open = false"></div>
     </Teleport>
   </div>
-</template>
+</template> 
 
 <script>
-import Arweave from "arweave";
-
-const ar_one = Arweave.init({
-  host: "localhost",
-  port: 1984,
-  protocol: "http",
-});
+import { mapActions } from "vuex";
 
 export default {
   name: "CreateBeat",
@@ -51,54 +45,27 @@ export default {
     keyFile: Object,
   },
   methods: {
+    ...mapActions(["uploadBeat"]),
     async test(e) {
       e.preventDefault();
       this.open = true;
     },
-    async sendTxWithText1(e) {
+    async sendTxWithText(e) {
       e.preventDefault();
 
-      const publicKey = this.keyFile.public_key;
-      const privateKey = this.keyFile.private_key;
-      const beat_name = this.beat_name;
-      const note = this.note;
-
-      console.log(document.getElementById("real_audio_file").files);
-      let real_file = document.getElementById("real_audio_file").files[0];
-      console.log("real audio file: " + real_file);
-      const frr = new FileReader();
-      frr.readAsArrayBuffer(real_file);
-      frr.onload = async function () {
-        var arrayBufferOne = frr.result;
-
-        var walletAddress = publicKey;
-
-        await ar_one.api.get("mint/" + walletAddress + "/10000000000000000");
-
-        let transaction = await ar_one.createTransaction(
-          {
-            data: arrayBufferOne,
-          },
-          privateKey
-        );
-        transaction.addTag("Content-Type", "text/mpeg");
-        transaction.addTag("App-Name", "BeatLedger");
-        transaction.addTag("Name", beat_name);
-        transaction.addTag("Note", note);
-
-        await ar_one.transactions.sign(transaction, privateKey);
-
-        let uploader = await ar_one.transactions.getUploader(transaction);
-
-        while (!uploader.isComplete) {
-          await uploader.uploadChunk();
-          console.log(
-            `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
+      await this.uploadBeat({
+        public_key: this.keyFile.public_key,
+        private_key: this.keyFile.private_key,
+        beat_name: this.beat_name,
+        note: this.note,
+      }).then(() => {
+        if (this.$store.state.uploadBeatComplete) {
+          this.open = false;
+          alert(
+            "Beat successfully uploaded, please wait for some time for it to be confirmed and uploaded to the network!"
           );
         }
-
-        console.log("Tx successfully sent!");
-      };
+      });
     },
   },
 };

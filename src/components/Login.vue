@@ -17,12 +17,7 @@
 </template>
 
 <script>
-import Arweave from "arweave";
-const ar_two = Arweave.init({
-  host: "localhost",
-  port: 1984,
-  protocol: "http",
-});
+import API from "../api/api";
 
 export default {
   name: "Login",
@@ -43,9 +38,7 @@ export default {
         reader.onload = async (f) => {
           try {
             var fileContent = JSON.parse(f.target.result);
-            var addy = await ar_two.wallets.getAddress(fileContent);
-            // this.$store.commit("setPublicKey", addy);
-            // this.$store.commit("setPrivateKey", fileContent);
+            var addy = await API.ar.wallets.getAddress(fileContent);
             var kf = {
               public_key: addy,
               private_key: fileContent,
@@ -60,9 +53,9 @@ export default {
       }
     },
     async generate() {
-      ar_two.wallets.generate().then(async (key) => {
+      API.ar.wallets.generate().then(async (key) => {
         console.log(JSON.stringify(key));
-        var public_key = await ar_two.wallets.getAddress(key);
+        var public_key = await API.ar.wallets.getAddress(key);
         var filename = "arweave-key-" + public_key + ".json";
         var file = new Blob([JSON.stringify(key)], { type: JSON });
         if (window.navigator.msSaveOrOpenBlob)
