@@ -1,7 +1,9 @@
 <template>
   <div>
-    <Header />
-    <router-view></router-view>
+    <Header @continueChain="continueChain" />
+    <router-view v-slot="{ Component }">
+      <component ref="mainComponent" :is="Component" />
+    </router-view>
     <Footer />
   </div>
 </template>
@@ -19,7 +21,11 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    continueChain(payload) {
+      this.$refs.mainComponent.$.ctx.continueChain1(payload);
+    },
+  },
 };
 </script>
 

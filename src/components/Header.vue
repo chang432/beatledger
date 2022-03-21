@@ -5,9 +5,13 @@
       <router-link to="/about" class="about">About</router-link>
     </div>
     <div class="sub_header">
+      <input class="input_field" type="Search" v-model="searchContent" />
+      <p @click="startChain" class="beat_btn">{{ searchToggle }}</p>
+    </div>
+    <div class="sub_header">
       <template v-if="isLoggedInValue">
         <CreateBeat :keyFile="keyFile" />
-        <p class="btn" id="keyfileName">{{ keyFile.public_key }}</p>
+        <p class="wallet_address" id="keyfileName">{{ keyFile.public_key }}</p>
         <p @click="logout" class="beat_btn">Logout</p>
       </template>
       <Login @login-successful="loginSuccessful" v-else />
@@ -26,6 +30,7 @@ export default {
     Login,
     CreateBeat,
   },
+  emits: ["continueChain"],
   data() {
     return {
       isLoggedInValue: this.$ls.get("isLoggedIn", false),
@@ -33,6 +38,8 @@ export default {
         public_key: "",
         private_key: Object,
       }),
+      searchToggle: "Search",
+      searchContent: "",
     };
   },
   computed: {
@@ -74,6 +81,24 @@ export default {
       this.isLoggedIn = true;
       this.keyFile = e;
     },
+    startChain() {
+      if (this.searchToggle == "Search" && this.searchContent == "") {
+        alert("Please type something in the search box");
+      } else if (this.searchToggle == "Search") {
+        this.$emit("continueChain", {
+          showSearch: true,
+          searchContent: this.searchContent,
+        });
+        this.searchToggle = "Exit";
+      } else if (this.searchToggle == "Exit") {
+        this.$emit("continueChain", {
+          showSearch: false,
+          searchContent: this.searchContent,
+        });
+        this.searchContent = "";
+        this.searchToggle = "Search";
+      }
+    },
   },
 };
 </script>
@@ -90,7 +115,7 @@ export default {
   align-items: flex-end;
   justify-content: space-between;
 }
-.btn {
+.wallet_address {
   background: #000;
   color: #fff;
   border: none;
@@ -102,7 +127,15 @@ export default {
   padding: 6px 8px;
   margin-right: 8px;
 }
-.btn:focus {
+.wallet_address:focus {
+  outline: none;
+}
+.input_field {
+  border-radius: 5px;
+  padding: 6px 8px;
+  margin-right: 8px;
+}
+.input_field:focus {
   outline: none;
 }
 .beat_btn {

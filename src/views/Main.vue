@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="main">
-      <BeatList />
+      <BeatList ref="beatListComponent" />
     </div>
   </div>
 </template>
@@ -17,7 +17,15 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    continueChain1({ showSearch, searchContent }) {
+      if (showSearch) {
+        this.$refs.beatListComponent.searchLoad(searchContent);
+      } else {
+        this.$refs.beatListComponent.defaultLoad();
+      }
+    },
+  },
 };
 </script>
 
