@@ -31,6 +31,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import API from "../api/api";
 
 export default {
   name: "CreateBeat",
@@ -52,6 +53,20 @@ export default {
     },
     async sendTxWithText(e) {
       e.preventDefault();
+
+      // validate length
+      // if (!withinMaxLength) {
+      //   alert("Please specify a beat name less than X characters");
+      //   return;
+      // }
+
+      // validate characters?
+
+      const isUnique = await API.isUniqueBeatName(this.beat_name);
+      if (!isUnique) {
+        alert("Please specify an original beat name");
+        return;
+      }
 
       await this.uploadBeat({
         public_key: this.keyFile.public_key,
