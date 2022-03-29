@@ -51,14 +51,37 @@ export default {
       e.preventDefault();
       this.open = true;
     },
+    isWithinMaxLength(name, max) {
+      if (name.length > 0 && name.length <= max) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     async sendTxWithText(e) {
       e.preventDefault();
 
-      // validate length
-      // if (!withinMaxLength) {
-      //   alert("Please specify a beat name less than X characters");
-      //   return;
-      // }
+      // validate beat name length
+      if (!this.isWithinMaxLength(this.beat_name, 16)) {
+        alert(
+          "Please specify a beat name with length greater than 0 and less than or equal to 16 characters"
+        );
+        return;
+      }
+
+      // validate beat name characters
+      if (this.beat_name.includes(" ")) {
+        alert("Please specify a beat name without spaces");
+        return;
+      }
+
+      // validate beat note length
+      if (!this.isWithinMaxLength(this.note, 50)) {
+        alert(
+          "Please specify a beat note with length greater than 0 and less than or equal to 50 characters"
+        );
+        return;
+      }
 
       // validate characters?
 
@@ -73,14 +96,18 @@ export default {
         private_key: this.keyFile.private_key,
         beat_name: this.beat_name,
         note: this.note,
-      }).then(() => {
-        if (this.$store.state.uploadBeatComplete) {
-          this.open = false;
-          alert(
-            "Beat successfully uploaded, please wait for some time for it to be confirmed and uploaded to the network!"
-          );
-        }
-      });
+      })
+        .then(() => {
+          if (this.$store.state.uploadBeatComplete) {
+            this.open = false;
+            alert(
+              "Beat successfully uploaded, please wait for some time for it to be confirmed and uploaded to the network!"
+            );
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
 };
