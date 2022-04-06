@@ -10,7 +10,7 @@
     </div>
     <div class="sub_header">
       <template v-if="isLoggedInValue">
-        <CreateBeat :keyFile="keyFile" />
+        <UploadBeat :keyFile="keyFile" />
         <p class="wallet_address" id="keyfileName">{{ keyFile.public_key }}</p>
         <p @click="logout" class="beat_btn">Logout</p>
       </template>
@@ -21,14 +21,14 @@
 
 <script>
 import Login from "./Login.vue";
-import CreateBeat from "./CreateBeat.vue";
+import UploadBeat from "./UploadBeat.vue";
 // import { mapState } from "vuex";
 
 export default {
   name: "Header",
   components: {
     Login,
-    CreateBeat,
+    UploadBeat,
   },
   emits: ["continueChain"],
   data() {
@@ -67,7 +67,7 @@ export default {
     logout() {
       this.isLoggedIn = false;
     },
-    createBeat() {
+    UploadBeat() {
       try {
         if (this.keyFileValue.public_key == "") {
           throw "No account found, not logged in!";

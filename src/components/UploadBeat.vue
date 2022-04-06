@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="test" class="btn beat_btn">Create Beat</button>
+    <button @click="test" class="btn beat_btn">Upload Beat</button>
 
     <Teleport to="body">
       <div v-if="open" class="beat_div">
@@ -34,7 +34,7 @@ import { mapActions } from "vuex";
 import API from "../api/api";
 
 export default {
-  name: "CreateBeat",
+  name: "UploadBeat",
   data() {
     return {
       open: false,
