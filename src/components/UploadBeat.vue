@@ -21,6 +21,7 @@
             />
           </div>
 
+          <p>You have X free beat uploads left</p>
           <input type="submit" value="submit" />
         </form>
       </div>
@@ -46,7 +47,7 @@ export default {
     keyFile: Object,
   },
   methods: {
-    ...mapActions(["uploadBeat"]),
+    ...mapActions(["uploadBeat", "freeBeatsLeft"]),
     async test(e) {
       e.preventDefault();
       this.open = true;
