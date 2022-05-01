@@ -3,7 +3,7 @@
 
   <Teleport to="body">
     <div v-if="open" class="login_div">
-      <p class="text" style="margin-top: 20px">Upload Keyfile</p>
+      <p class="text">Upload Keyfile</p>
       <div class="key_file_div">
         <input type="file" id="key_file" accept=".json" />
       </div>
@@ -96,34 +96,22 @@ export default {
   margin-bottom: 20px;
 }
 .text {
+  background-color: #474747;
+  color: #ffffff;
   text-align: center;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 .popup_btn {
+  display: block;
+  background-color: #333333;
   margin: 0px auto 20px;
   width: 30%;
   padding: 8px 0px;
 }
 .login_btn {
-  padding: 6px 8px;
-  margin-right: 8px;
-}
-.btn {
-  display: block;
-  background: #000;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 12px;
-  font-family: inherit;
-}
-.btn:focus {
-  outline: none;
-}
-.btn:active {
-  transform: scale(0.98);
+  background-color: #1f1f1f;
+  margin-right: 30px;
 }
 .outside_div {
   width: 100vw;
@@ -147,9 +135,9 @@ export default {
   right: 0;
   margin: auto;
 
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 5px;
-  background-color: cadetblue;
+  background-color: #474747;
 
   width: 400px;
   height: 300px;

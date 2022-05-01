@@ -30,28 +30,24 @@ export default {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Righteous", cursive;
 }
-.sub_header {
-  display: flex;
-  align-items: flex-end;
+.btn {
+  font-size: 20px;
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Righteous", cursive;
+  cursor: pointer;
+  border: none;
 }
-.title {
-  margin-left: 10px;
-  margin-right: 15px;
-}
-.about {
-  margin-bottom: 5px;
-}
-.login {
-  margin-right: 10px;
-  margin-bottom: 5px;
+.btn:active {
+  transform: scale(0.98);
 }
 </style>

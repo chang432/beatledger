@@ -1,18 +1,18 @@
 <template>
   <div class="header">
     <div class="sub_header">
-      <h1 class="title">BEAT LEDGER</h1>
-      <router-link to="/about" class="about">About</router-link>
+      <img class="beat_logo" src="../assets/beat_logo.png" />
+      <router-link to="/about" class="btn">About</router-link>
     </div>
-    <div class="sub_header">
+    <div class="sub_header input_header">
       <input class="input_field" type="Search" v-model="searchContent" />
-      <p @click="startChain" class="beat_btn">{{ searchToggle }}</p>
+      <p @click="startChain" class="btn">{{ searchToggle }}</p>
     </div>
     <div class="sub_header">
       <template v-if="isLoggedInValue">
         <UploadBeat :keyFile="keyFile" />
         <p class="wallet_address" id="keyfileName">{{ keyFile.public_key }}</p>
-        <p @click="logout" class="beat_btn">Logout</p>
+        <p @click="logout" class="btn">Logout</p>
       </template>
       <Login @login-successful="loginSuccessful" v-else />
     </div>
@@ -106,14 +106,46 @@ export default {
 <style scoped>
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  background-color: blanchedalmond;
+  background-color: #1f1f1f;
+  height: 120px;
 }
 .sub_header {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.input_header {
+  align-items: center;
+}
+.beat_logo {
+  width: 350px;
+  height: 60px;
+  margin-bottom: 5.5px;
+  margin-left: 30px;
+  margin-right: 50px;
+
+  /* code to fix blurriness from scaling down image */
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+}
+.input_field {
+  padding: 2px 2px;
+  min-width: 100%;
+  margin-right: 8px;
+}
+.input_field:focus {
+  outline: none;
+}
+.beat_btn:focus {
+  outline: none;
+}
+.beat_btn:active {
+  transform: scale(0.98);
 }
 .wallet_address {
   background: #000;
@@ -129,32 +161,5 @@ export default {
 }
 .wallet_address:focus {
   outline: none;
-}
-.input_field {
-  border-radius: 5px;
-  padding: 6px 8px;
-  margin-right: 8px;
-}
-.input_field:focus {
-  outline: none;
-}
-.beat_btn {
-  background: #000;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 12px;
-  font-family: inherit;
-
-  padding: 6px 8px;
-  margin-right: 8px;
-}
-.beat_btn:focus {
-  outline: none;
-}
-.beat_btn:active {
-  transform: scale(0.98);
 }
 </style>
