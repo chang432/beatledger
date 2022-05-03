@@ -81,6 +81,26 @@ export default {
 </script>
 
 <style scoped>
+.login_div {
+  position: absolute;
+  padding: 5px;
+  display: block;
+
+  /* centers the login box */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  /* border: 1px solid black; */
+  border-radius: 5px;
+  background-color: #474747;
+
+  width: 400px;
+  height: 300px;
+  z-index: 999;
+}
 .line_separator {
   width: 92%;
   margin: 0px auto 20px;
@@ -111,7 +131,7 @@ export default {
 }
 .login_btn {
   background-color: #1f1f1f;
-  margin-right: 30px;
+  margin-right: 15px;
 }
 .outside_div {
   width: 100vw;
@@ -120,27 +140,5 @@ export default {
   top: 0px;
   left: 0px;
   z-index: 998;
-}
-.login_div {
-  position: absolute;
-  padding: 5px;
-  /* flex-flow: wrap; */
-  /* justify-content: space-between; */
-  display: block;
-
-  /* centers the login box */
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-
-  /* border: 1px solid black; */
-  border-radius: 5px;
-  background-color: #474747;
-
-  width: 400px;
-  height: 300px;
-  z-index: 999;
 }
 </style>

@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <div class="main">
-      <BeatList ref="beatListComponent" />
-    </div>
+  <div class="main">
+    <BeatList ref="beatListComponent" />
   </div>
 </template>
 

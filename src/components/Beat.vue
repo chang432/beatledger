@@ -1,22 +1,29 @@
 <template>
   <div class="beatentry">
-    <div class="top_section">
-      <p @click="viewTxId(beat.tx_id)" class="tx_address">
-        {{ beat.tx_id }}
-      </p>
-      <p class="by_separator">By</p>
-      <p @click="viewOwnerAddress(beat.owner_address)" class="owner_address">
-        {{ beat.owner_address }}
-      </p>
+    <div class="beat_top_section">
+      <div class="beat_top_section_child">
+        <p class="beat_name">{{ beat.name }}</p>
+      </div>
+      <div class="beat_top_section_child">
+        <p class="beat_note">{{ beat.note }}</p>
+      </div>
+      <div class="beat_top_section_child_bigger">
+        <p @click="viewTxId(beat.tx_id)" class="tx_address">
+          {{ beat.tx_id }}
+        </p>
+      </div>
+      <div class="beat_top_section_child_bigger">
+        <p @click="viewOwnerAddress(beat.owner_address)" class="owner_address">
+          {{ beat.owner_address }}
+        </p>
+      </div>
     </div>
     <div class="bot_section">
       <component
         @click="togglePlayPause()"
         :is="beat.playPauseState"
       ></component>
-      <p class="beat_name">{{ beat.name }}</p>
-      <p class="beat_name">-</p>
-      <p class="beat_note">{{ beat.note }}</p>
+      <p>MUSIC_PLAYER_HERE</p>
     </div>
     <audio id="beat_player" />
   </div>
@@ -64,15 +71,20 @@ export default {
 
 <style scoped>
 .beatentry {
-  background: #f4f4f4;
-  margin: 5px;
+  margin: 0px 3px 3px;
   padding: 10px;
-  border-radius: 5px;
+  background-color: #474747;
 }
-
-.top_section {
+.beat_top_section {
   white-space: nowrap;
   overflow: hidden;
+  display: flex;
+}
+.beat_top_section_child {
+  flex: 1 1 0;
+}
+.beat_top_section_child_bigger {
+  flex: 2 1 0;
 }
 .tx_address {
   display: inline-block;
@@ -101,6 +113,8 @@ export default {
   margin-top: 10px;
   white-space: nowrap;
   overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
 }
 .play_icon {
   display: inline-block;

@@ -1,18 +1,18 @@
 <template>
   <div>
-    <button @click="test" class="btn beat_btn">Upload Beat</button>
+    <button @click="test" class="btn upload_beat_btn">Upload</button>
 
     <Teleport to="body">
-      <div v-if="open" class="beat_div">
+      <div v-if="open" class="upload_div">
         <form @submit="sendTxWithText">
-          <label for="fname">Beat Name</label>
+          <label class="text" for="fname">Beat Name</label>
           <input type="text" v-model="beat_name" id="fname" name="firstname" />
 
-          <label for="lname">Note</label>
+          <label class="text" for="lname">Note</label>
           <input type="text" v-model="note" id="lname" name="lastname" />
 
           <div>
-            <p style="display: inline-block">Mp3:</p>
+            <p class="text" style="display: inline-block">Mp3:</p>
             <input
               style="display: inline-block"
               type="file"
@@ -21,8 +21,8 @@
             />
           </div>
 
-          <p>You have X free beat uploads left</p>
-          <input type="submit" value="submit" />
+          <p class="text">You have X free beat uploads left</p>
+          <input class="btn" type="submit" value="submit" />
         </form>
       </div>
       <div v-if="open" class="outside_div" @click="open = false"></div>
@@ -115,6 +115,25 @@ export default {
 </script>
 
 <style scoped>
+.upload_div {
+  position: absolute;
+  padding: 5px;
+  display: block;
+
+  /* centers the login box */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  border-radius: 5px;
+  background-color: #474747;
+
+  width: 400px;
+  height: 300px;
+  z-index: 999;
+}
 input[type="text"],
 select {
   width: 100%;
@@ -127,18 +146,15 @@ select {
 }
 
 input[type="submit"] {
-  width: 100%;
-  background-color: #4caf50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  /* width: 100%; */
+  display: block;
+  background-color: #474747;
+  color: #ffffff;
+  margin: 10px auto;
 }
 
 input[type="submit"]:hover {
-  background-color: #45a049;
+  color: #45a049;
 }
 
 .key_file_div {
@@ -149,32 +165,16 @@ input[type="submit"]:hover {
 .text {
   text-align: center;
   margin-bottom: 20px;
+  color: #ffffff;
 }
 .popup_btn {
   margin: 0px auto 20px;
   width: 30%;
   padding: 8px 0px;
 }
-.beat_btn {
-  padding: 6px 8px;
+.upload_beat_btn {
+  background-color: #1f1f1f;
   margin-right: 8px;
-}
-.btn {
-  display: block;
-  background: #000;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 12px;
-  font-family: inherit;
-}
-.btn:focus {
-  outline: none;
-}
-.btn:active {
-  transform: scale(0.98);
 }
 .outside_div {
   width: 100vw;
@@ -183,27 +183,5 @@ input[type="submit"]:hover {
   top: 0px;
   left: 0px;
   z-index: 998;
-}
-.beat_div {
-  position: absolute;
-  padding: 5px;
-  /* flex-flow: wrap; */
-  /* justify-content: space-between; */
-  display: block;
-
-  /* centers the login box */
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-
-  border: 1px solid black;
-  border-radius: 5px;
-  background-color: cadetblue;
-
-  width: 400px;
-  height: 300px;
-  z-index: 999;
 }
 </style>

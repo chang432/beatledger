@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <Header @continueChain="continueChain" />
     <router-view v-slot="{ Component }">
       <component ref="mainComponent" :is="Component" />
@@ -38,6 +38,10 @@ export default {
 }
 body {
   font-family: "Righteous", cursive;
+  background-color: #1f1f1f;
+}
+.main {
+  background-color: #1f1f1f;
 }
 .btn {
   font-size: 20px;

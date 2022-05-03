@@ -1,18 +1,18 @@
 <template>
-  <div class="header">
+  <div class="main header">
     <div class="sub_header">
       <img class="beat_logo" src="../assets/beat_logo.png" />
       <router-link to="/about" class="btn">About</router-link>
     </div>
-    <div class="sub_header input_header">
+    <div class="sub_header center_header">
       <input class="input_field" type="Search" v-model="searchContent" />
       <p @click="startChain" class="btn">{{ searchToggle }}</p>
     </div>
-    <div class="sub_header">
+    <div class="sub_header center_header">
       <template v-if="isLoggedInValue">
         <UploadBeat :keyFile="keyFile" />
         <p class="wallet_address" id="keyfileName">{{ keyFile.public_key }}</p>
-        <p @click="logout" class="btn">Logout</p>
+        <p @click="logout" class="btn logout_btn">Logout</p>
       </template>
       <Login @login-successful="loginSuccessful" v-else />
     </div>
@@ -108,7 +108,6 @@ export default {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  background-color: #1f1f1f;
   height: 120px;
 }
 .sub_header {
@@ -116,7 +115,7 @@ export default {
   align-items: flex-end;
   margin-bottom: 22px;
 }
-.input_header {
+.center_header {
   align-items: center;
 }
 .beat_logo {
@@ -124,7 +123,7 @@ export default {
   height: 60px;
   margin-bottom: 5.5px;
   margin-left: 30px;
-  margin-right: 50px;
+  margin-right: 30px;
 
   /* code to fix blurriness from scaling down image */
   image-rendering: -moz-crisp-edges; /* Firefox */
@@ -141,15 +140,9 @@ export default {
 .input_field:focus {
   outline: none;
 }
-.beat_btn:focus {
-  outline: none;
-}
-.beat_btn:active {
-  transform: scale(0.98);
-}
 .wallet_address {
-  background: #000;
-  color: #fff;
+  background: #393939;
+  color: #ffffff;
   border: none;
   border-radius: 5px;
   text-decoration: none;
@@ -161,5 +154,8 @@ export default {
 }
 .wallet_address:focus {
   outline: none;
+}
+.logout_btn {
+  margin-right: 15px;
 }
 </style>

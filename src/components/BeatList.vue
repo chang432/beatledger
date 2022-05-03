@@ -1,5 +1,14 @@
 <template>
-  <div>
+  <div class="main">
+    <div class="header_label">
+      <p class="header_label_child">Name</p>
+      <p class="header_label_child">Note</p>
+      <p class="header_label_child flex_grow_big">Beat Id</p>
+      <p class="header_label_child flex_grow_big">Author Id</p>
+    </div>
+    <div>
+      <fa icon="spinner" />
+    </div>
     <div :key="beat.tx_id" v-for="beat in beats">
       <BeatModule @playPauseEvent="playPauseLogic" :beat="beat" />
     </div>
@@ -263,4 +272,17 @@ export default {
 </script>
 
 <style scoped>
+.header_label {
+  display: flex;
+  margin: 5px 10px;
+}
+.header_label_child {
+  color: #ffffff;
+  font-size: 12px;
+  font-family: "Roboto", sans-serif;
+  flex: 1 1 0;
+}
+.flex_grow_big {
+  flex: 2 1 0;
+}
 </style>
