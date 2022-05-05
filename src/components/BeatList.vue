@@ -6,9 +6,9 @@
       <p class="header_label_child flex_grow_big">Beat Id</p>
       <p class="header_label_child flex_grow_big">Author Id</p>
     </div>
-    <div>
-      <fa icon="spinner" />
-    </div>
+    <!-- <div class="spinner">
+      <fa :icon="['fa', 'spinner']" size="2x" class="fa-spin" />
+    </div> -->
     <div :key="beat.tx_id" v-for="beat in beats">
       <BeatModule @playPauseEvent="playPauseLogic" :beat="beat" />
     </div>
@@ -285,4 +285,8 @@ export default {
 .flex_grow_big {
   flex: 2 1 0;
 }
+/* .spinner {
+  display: flex;
+  justify-content: a;
+} */
 </style>

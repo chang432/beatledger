@@ -5,6 +5,7 @@ import router from './router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import 'font-awesome-animation/css/font-awesome-animation.min.css'
 
 import 'vue-universal-modal/dist/index.css'
 import VueUniversalModal from 'vue-universal-modal'
