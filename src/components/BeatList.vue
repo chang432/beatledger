@@ -12,7 +12,7 @@
     <div :key="beat.tx_id" v-for="beat in beats">
       <BeatModule @playPauseEvent="playPauseLogic" :beat="beat" />
     </div>
-    <form @submit="sendTxWithText" class="add-form">
+    <form @submit="uploadBeatTest" class="add-form">
       <div>
         <label>Beat Name:</label>
         <input type="text" v-model="beat_name" name="beat_name" />
@@ -38,7 +38,6 @@
 
 <script>
 import BeatModule from "./Beat";
-import ArDB from "ardb";
 import API from "../api/api";
 
 export default {
@@ -56,17 +55,6 @@ export default {
     BeatModule,
   },
   methods: {
-    getTxData(beat_id) {
-      return new Promise((resolve) => {
-        API.ar.transactions.getData(beat_id, { decode: true }).then((data) => {
-          // data is Uint8Array
-          const blob = new Blob([data], {
-            type: "audio/mpeg",
-          });
-          resolve(blob);
-        });
-      });
-    },
     async searchLoad(searchEntry) {
       this.showLoader = true;
       this.beats = await API.queryAllBeatsFiltered(searchEntry);
@@ -98,7 +86,7 @@ export default {
         audio_player.play();
       };
     },
-    async sendTxWithText(e) {
+    async uploadBeatTest(e) {
       e.preventDefault();
 
       let beat_name = this.beat_name;
@@ -109,36 +97,7 @@ export default {
       fr.readAsArrayBuffer(file1);
       fr.onload = async function () {
         var arrayBuffer = fr.result;
-        console.log(arrayBuffer);
-
-        var wallet = await API.ar.wallets.generate();
-
-        var walletAddress = await API.ar.wallets.getAddress(wallet);
-        await API.ar.api.get("mint/" + walletAddress + "/10000000000000000");
-
-        let transaction = await API.ar.createTransaction(
-          {
-            data: arrayBuffer,
-          },
-          wallet
-        );
-        transaction.addTag("Content-Type", "text/mpeg");
-        transaction.addTag("App-Name", "BeatLedger");
-        transaction.addTag("Name", beat_name);
-        transaction.addTag("Note", note);
-
-        await API.ar.transactions.sign(transaction, wallet);
-
-        let uploader = await API.ar.transactions.getUploader(transaction);
-
-        while (!uploader.isComplete) {
-          await uploader.uploadChunk();
-          console.log(
-            `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
-          );
-        }
-
-        console.log("Tx successfully sent!");
+        await API.uploadBeatTest(beat_name, note, arrayBuffer);
       };
     },
     playPauseLogic(event) {
@@ -171,9 +130,6 @@ export default {
   },
   async mounted() {
     this.defaultLoad();
-  },
-  created() {
-    this.ardb = new ArDB(API.ar);
   },
 };
 </script>

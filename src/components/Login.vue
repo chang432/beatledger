@@ -30,51 +30,10 @@ export default {
   methods: {
     upload() {
       let file = document.getElementById("key_file").files[0];
-      if (file != null) {
-        this.open = false;
-
-        const reader = new FileReader();
-        reader.readAsText(file);
-        reader.onload = async (f) => {
-          try {
-            var fileContent = JSON.parse(f.target.result);
-            var addy = await API.ar.wallets.getAddress(fileContent);
-            var kf = {
-              public_key: addy,
-              private_key: fileContent,
-            };
-            this.$emit("loginSuccessful", kf);
-          } catch (err) {
-            console.error(err);
-          }
-        };
-      } else {
-        alert("Key File not Uploaded");
-      }
+      API.uploadKeyFile(this, file);
     },
     async generate() {
-      API.ar.wallets.generate().then(async (key) => {
-        console.log(JSON.stringify(key));
-        var public_key = await API.ar.wallets.getAddress(key);
-        var filename = "arweave-key-" + public_key + ".json";
-        var file = new Blob([JSON.stringify(key)], { type: JSON });
-        if (window.navigator.msSaveOrOpenBlob)
-          // IE10+
-          window.navigator.msSaveOrOpenBlob(file, filename);
-        else {
-          // Others
-          var a = document.createElement("a"),
-            url = URL.createObjectURL(file);
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function () {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 0);
-        }
-      });
+      await API.generate();
     },
   },
 };
