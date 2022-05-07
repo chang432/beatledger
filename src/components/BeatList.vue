@@ -67,107 +67,15 @@ export default {
         });
       });
     },
-    searchLoad(searchEntry) {
+    async searchLoad(searchEntry) {
       this.showLoader = true;
-      var new_beats = [];
-
-      const queryByBeatOwner = new Promise((resolve) => {
-        // Filter by beat owner
-        this.ardb
-          .search("transactions")
-          .appName("BeatLedger")
-          .from(searchEntry)
-          .findAll()
-          .then((txs) => {
-            resolve(txs);
-          });
-      });
-
-      const queryByBeatName = new Promise((resolve) => {
-        // Filter by beat name
-        this.ardb
-          .search("transactions")
-          .appName("BeatLedger")
-          .tag("Name", searchEntry)
-          .findAll()
-          .then((txs) => {
-            resolve(txs);
-          });
-      });
-
-      Promise.all([queryByBeatOwner, queryByBeatName])
-        .then((combined_txs) => {
-          for (const tx_arr of combined_txs) {
-            for (const tx of tx_arr) {
-              let new_beat = {
-                name: tx.tags[2].value,
-                tx_id: tx.id,
-                owner_address: tx.owner.address,
-                note: tx.tags[3].value,
-                playPauseState: "faPlayComponent",
-              };
-              new_beats.push(new_beat);
-            }
-          }
-          return new_beats;
-        })
-        .then((new_beats) => {
-          Promise.all(
-            new_beats.map(async (obj) => {
-              obj.blob = await this.getTxData(obj.tx_id);
-              return obj;
-            })
-          ).then((new_beats) => {
-            this.beats = new_beats;
-            this.showLoader = false;
-          });
-          // .catch((error) => {
-          //   console.error(error);
-          // });
-        });
+      this.beats = await API.queryAllBeatsFiltered(searchEntry);
+      this.showLoader = false;
     },
-    defaultLoad() {
+    async defaultLoad() {
       this.showLoader = true;
-      var new_beats = [];
-
-      new Promise((resolve) => {
-        this.ardb
-          .search("transactions")
-          .appName("BeatLedger")
-          .findAll()
-          .then((txs) => {
-            resolve(txs);
-          });
-      })
-        .then((txs) => {
-          for (const tx of txs) {
-            let new_beat = {
-              name: tx.tags[2].value,
-              tx_id: tx.id,
-              owner_address: tx.owner.address,
-              note: tx.tags[3].value,
-              playPauseState: "faPlayComponent",
-            };
-            new_beats.push(new_beat);
-          }
-          return new_beats;
-        })
-        .then((new_beats) => {
-          Promise.all(
-            new_beats.map(async (obj) => {
-              // console.log(obj);
-              obj.blob = await this.getTxData(obj.tx_id);
-              return obj;
-            })
-          ).then((new_beats) => {
-            this.beats = new_beats;
-            this.showLoader = false;
-          });
-          // .catch((error) => {
-          //   console.error(error);
-          // });
-        });
-
+      this.beats = await API.queryAllBeats();
+      this.showLoader = false;
       console.log("Website successfully refreshed");
     },
     playMp3Logic() {
