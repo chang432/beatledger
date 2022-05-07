@@ -6,9 +6,9 @@
       <p class="header_label_child flex_grow_big">Beat Id</p>
       <p class="header_label_child flex_grow_big">Author Id</p>
     </div>
-    <!-- <div class="spinner">
+    <div class="spinner" v-if="showLoader">
       <fa :icon="['fa', 'spinner']" size="2x" class="fa-spin" />
-    </div> -->
+    </div>
     <div :key="beat.tx_id" v-for="beat in beats">
       <BeatModule @playPauseEvent="playPauseLogic" :beat="beat" />
     </div>
@@ -49,6 +49,7 @@ export default {
       beats: [],
       beat_name: "",
       note: "",
+      showLoader: false,
     };
   },
   components: {
@@ -67,6 +68,7 @@ export default {
       });
     },
     searchLoad(searchEntry) {
+      this.showLoader = true;
       var new_beats = [];
 
       const queryByBeatOwner = new Promise((resolve) => {
@@ -117,6 +119,7 @@ export default {
             })
           ).then((new_beats) => {
             this.beats = new_beats;
+            this.showLoader = false;
           });
           // .catch((error) => {
           //   console.error(error);
@@ -124,6 +127,7 @@ export default {
         });
     },
     defaultLoad() {
+      this.showLoader = true;
       var new_beats = [];
 
       new Promise((resolve) => {
@@ -157,6 +161,7 @@ export default {
             })
           ).then((new_beats) => {
             this.beats = new_beats;
+            this.showLoader = false;
           });
           // .catch((error) => {
           //   console.error(error);
@@ -255,12 +260,6 @@ export default {
       // window.open("https://viewblock.io/arweave/address/" + owner_address);
       window.open("http://localhost:1984/wallet/" + owner_address + "/balance");
     },
-    async fetchBeats() {
-      const res = await fetch("http://localhost:5000/beats");
-      const data = await res.json();
-
-      return data;
-    },
   },
   async mounted() {
     this.defaultLoad();
@@ -285,8 +284,10 @@ export default {
 .flex_grow_big {
   flex: 2 1 0;
 }
-/* .spinner {
+.spinner {
   display: flex;
-  justify-content: a;
-} */
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 </style>
