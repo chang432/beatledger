@@ -1,6 +1,7 @@
-// const arweave = require('./arweave').default
+import store from "../store/store"
 const Ar = require('arweave').default
 const ArDB = require('ardb').default
+const ArGql = require('ar-gql')
 
 const ar = Ar.init({
   host: "localhost",
@@ -45,7 +46,94 @@ const API = {
     });
   },
 
-  async queryAllBeats () {
+  async queryAllBeatsNumber () {
+    await ardb
+      .search("transactions")
+      .appName("BeatLedger")
+      .findAll()
+      .then((txs) => {
+        console.log(txs.length);
+      });
+  },
+
+  // query cursors with ArGql
+  async queryCursors () {
+    let query = `query($cursor: String) {
+      transactions(
+        sort: HEIGHT_DESC,
+        owners: ["kLx41ALBpTVpCAgymxPaooBgMyk9hsdijSF2T-lZ_Bg"],
+        after: $cursor
+      ) {
+        pageInfo {
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            id
+          }
+        }
+      }
+    }`
+
+    await ArGql
+      .all(query)
+      .then((res) => {
+        // console.log(res);
+        let numBeatsPerPage = 5
+        var cursors = []
+        var totalPages = Math.ceil(res.length / numBeatsPerPage);
+        var totalBeats = res.length
+
+        // add empty cursor for first page
+        cursors.push("");
+
+        for (let i = numBeatsPerPage - 1; i < totalBeats; i += numBeatsPerPage) {
+          // cursors starts on second page
+          let entry = res[i];
+          // let txid = entry.node.id
+          let cursor = entry.cursor
+          cursors.push(cursor)
+          // console.log(`${i}\ntxid: ${txid}\ncursor: ${cursor}\n`)
+        }
+
+        store.dispatch("populateCursors", [totalPages, cursors, totalBeats])
+      });
+  },
+
+  // query beats with cursors from ArGql
+  async queryBeatsWithCursor (cursor) {
+    console.log(`cursor to query: ${cursor}`);
+    let query = `query {
+      transactions(
+        sort: HEIGHT_DESC,
+        first: 5,
+        owners: ["kLx41ALBpTVpCAgymxPaooBgMyk9hsdijSF2T-lZ_Bg"],
+        after: "${cursor}"
+      ) {
+        pageInfo {
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            id
+          }
+        }
+      }
+    }`
+
+    await ArGql
+      .run(query)
+      .then((res) => {
+        for (var entry of res.data.transactions.edges) {
+          console.log(entry);
+        }
+      });
+  },
+
+  // Used for querying test data from ArLocal
+  async queryAllBeatsArdb () {
     var new_beats = [];
 
     const query_beats = await new Promise((resolve) => {
@@ -75,7 +163,6 @@ const API = {
     return new Promise((resolve) => {
       Promise.all(
         query_beats.map(async (obj) => {
-          // console.log(obj);
           obj.blob = await this.getTxData(obj.tx_id);
           return obj;
         })
@@ -172,6 +259,41 @@ const API = {
       console.log(
         `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
       );
+    }
+
+    console.log("Tx successfully sent!");
+  },
+
+  async uploadBeatsTestMany (arrayBuffer) {
+    for (let i = 0; i < 10; i++) {
+      let beat_name = "beat_" + i;
+      let beat_note = "beat_note" + i;
+      let wallet = await ar.wallets.generate();
+
+      let walletAddress = await ar.wallets.getAddress(wallet);
+      await ar.api.get("mint/" + walletAddress + "/10000000000000000");
+
+      let transaction = await ar.createTransaction(
+        {
+          data: arrayBuffer,
+        },
+        wallet
+      );
+      transaction.addTag("Content-Type", "text/mpeg");
+      transaction.addTag("App-Name", "BeatLedger");
+      transaction.addTag("Name", beat_name);
+      transaction.addTag("Note", beat_note);
+
+      await ar.transactions.sign(transaction, wallet);
+
+      let uploader = await ar.transactions.getUploader(transaction);
+
+      while (!uploader.isComplete) {
+        await uploader.uploadChunk();
+        console.log(
+          `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
+        );
+      }
     }
 
     console.log("Tx successfully sent!");

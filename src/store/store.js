@@ -14,6 +14,9 @@ export default createStore({
       // subsidizedUploadStatus: 'Await',
       uploadBeatComplete: false,
       freeBeatsLeftComplete: false,
+      cursors: {},
+      totalPages: 0,
+      totalBeats: 0,
     }
   },
   mutations: {
@@ -28,6 +31,15 @@ export default createStore({
     },
     setFreeBeatsLeftComplete (state, newFreeBeatsLeftComplete) {
       state.freeBeatsLeftComplete = newFreeBeatsLeftComplete
+    },
+    setCursors (state, newCursors) {
+      state.cursors = newCursors
+    },
+    setTotalPages (state, newTotalPages) {
+      state.totalPages = newTotalPages
+    },
+    setTotalBeats (state, newTotalBeats) {
+      state.totalBeats = newTotalBeats
     }
   },
   actions: {
@@ -99,6 +111,12 @@ export default createStore({
           console.log("Tx successfully sent!");
         };
       });
+    },
+    async populateCursors ({ commit }, data) {
+      console.log("storing cursor");
+      commit("setTotalPages", data[0]);
+      commit("setCursors", data[1]);
+      commit("setTotalBeats", data[2]);
     },
   }
 })

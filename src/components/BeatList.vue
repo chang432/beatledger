@@ -32,7 +32,16 @@
       </div>
       <input type="submit" value="submit" />
     </form>
+    <button @click="uploadBeatsTestMany">Multi Upload</button>
     <audio id="audio_player1" />
+    <button @click="testQueryBeatsWithCursors">query beat with cursors</button>
+    <v-pagination
+      v-model="page"
+      :pages="total_pages"
+      :range-size="1"
+      active-color="#ffffff"
+      @update:modelValue="pageChangeTrigger"
+    />
   </div>
 </template>
 
@@ -49,12 +58,18 @@ export default {
       beat_name: "",
       note: "",
       showLoader: false,
+      page: 1,
+      total_pages: 0,
     };
   },
   components: {
     BeatModule,
   },
   methods: {
+    testQueryBeatsWithCursors() {
+      API.queryBeatsWithCursor();
+      console.log("cursors: " + JSON.stringify(this.$store.state.cursors));
+    },
     async searchLoad(searchEntry) {
       this.showLoader = true;
       this.beats = await API.queryAllBeatsFiltered(searchEntry);
@@ -62,9 +77,20 @@ export default {
     },
     async defaultLoad() {
       this.showLoader = true;
-      this.beats = await API.queryAllBeats();
-      this.showLoader = false;
+      this.beats = await API.queryAllBeatsArdb();
+
+      await API.queryCursors();
+
+      this.total_pages = this.$store.state.totalPages;
+      let cursors = this.$store.state.cursors;
+
+      await API.queryBeatsWithCursor(cursors[this.page - 1]);
+
+      console.log("DEBUG MODE: " + this.debug_mode);
+      console.log("total beats: " + this.$store.state.totalBeats);
       console.log("Website successfully refreshed");
+
+      this.showLoader = false;
     },
     playMp3Logic() {
       let file = document.getElementById("audio_file").files[0];
@@ -100,6 +126,20 @@ export default {
         await API.uploadBeatTest(beat_name, note, arrayBuffer);
       };
     },
+    async uploadBeatsTestMany() {
+      let fileHandle;
+
+      // open file picker
+      [fileHandle] = await window.showOpenFilePicker();
+
+      const fileData = await fileHandle.getFile();
+
+      const fr = new FileReader();
+      fr.readAsArrayBuffer(fileData);
+      fr.onload = async function () {
+        API.uploadBeatsTestMany(fr.result);
+      };
+    },
     playPauseLogic(event) {
       console.log("playPauseRefresh");
       var new_beats = [];
@@ -118,6 +158,10 @@ export default {
       }
 
       this.beats = new_beats;
+    },
+    pageChangeTrigger(new_page) {
+      console.log(`Changing to page: ${new_page}`);
+      this.defaultLoad();
     },
     viewTxId(tx_id) {
       // window.open("https://viewblock.io/arweave/tx/" + tx_id);

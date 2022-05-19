@@ -11,6 +11,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@hennge/vue3-pagination": "^1.0.17",
+    "ar-gql": "^0.0.6",
     "ardb": "^1.1.8",
     "arlocal": "github:textury/arlocal",
     "arweave": "1.10.18",
