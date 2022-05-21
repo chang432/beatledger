@@ -22,6 +22,7 @@
 <script>
 import Login from "./Login.vue";
 import UploadBeat from "./UploadBeat.vue";
+import logger from "../utilities/logger";
 // import { mapState } from "vuex";
 
 export default {
@@ -73,7 +74,7 @@ export default {
           throw "No account found, not logged in!";
         }
       } catch (e) {
-        console.error(e);
+        logger.error(e);
         this.keyFile = e;
       }
     },

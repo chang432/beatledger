@@ -48,6 +48,7 @@
 <script>
 import BeatModule from "./Beat";
 import API from "../api/api";
+import logger from "../utilities/logger";
 
 export default {
   name: "BeatList",
@@ -68,7 +69,7 @@ export default {
   methods: {
     testQueryBeatsWithCursors() {
       API.queryBeatsWithCursor();
-      console.log("cursors: " + JSON.stringify(this.$store.state.cursors));
+      logger.log("cursors: " + JSON.stringify(this.$store.state.cursors));
     },
     async searchLoad(searchEntry) {
       this.showLoader = true;
@@ -86,9 +87,8 @@ export default {
 
       await API.queryBeatsWithCursor(cursors[this.page - 1]);
 
-      console.log("DEBUG MODE: " + this.debug_mode);
-      console.log("total beats: " + this.$store.state.totalBeats);
-      console.log("Website successfully refreshed");
+      logger.log("total beats: " + this.$store.state.totalBeats);
+      logger.log("Website successfully refreshed");
 
       this.showLoader = false;
     },
@@ -100,15 +100,15 @@ export default {
       fileReader.readAsArrayBuffer(file);
       fileReader.onload = async function () {
         var arrayBuffer = this.result;
-        console.log(arrayBuffer);
-        console.log(arrayBuffer.byteLength);
+        logger.log(arrayBuffer);
+        logger.log(arrayBuffer.byteLength);
 
-        console.log(arrayBuffer);
+        logger.log(arrayBuffer);
         const blob = new Blob([arrayBuffer]);
         var url = URL.createObjectURL(blob);
         let audio_player = document.getElementById("audio_player1");
         audio_player.src = url;
-        console.log(url);
+        logger.log(url);
         audio_player.play();
       };
     },
@@ -141,7 +141,7 @@ export default {
       };
     },
     playPauseLogic(event) {
-      console.log("playPauseRefresh");
+      logger.log("playPauseRefresh");
       var new_beats = [];
 
       for (const beat of this.beats) {
@@ -160,7 +160,7 @@ export default {
       this.beats = new_beats;
     },
     pageChangeTrigger(new_page) {
-      console.log(`Changing to page: ${new_page}`);
+      logger.log(`Changing to page: ${new_page}`);
       this.defaultLoad();
     },
     viewTxId(tx_id) {

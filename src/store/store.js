@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import Arweave from "arweave";
+import logger from "../utilities/logger"
 
 const ar = Arweave.init({
   host: "localhost",
@@ -58,7 +59,7 @@ export default createStore({
 
     //   const free_beats_left = await dispatch("freeBeatsLeft")
     //   if (free_beats_left > 0) {
-    //     console.log(public_key + " has " + free_beats_left + " free beats left");
+    //     logger.log(public_key + " has " + free_beats_left + " free beats left");
     //   }
     // },
     async uploadBeat ({ commit, dispatch }, data) {
@@ -71,7 +72,7 @@ export default createStore({
 
       const free_beats_left = await dispatch("freeBeatsLeft")
       if (free_beats_left > 0) {
-        console.log(public_key + " has " + free_beats_left + " free beats left");
+        logger.log(public_key + " has " + free_beats_left + " free beats left");
       }
 
       let real_file = document.getElementById("real_audio_file").files[0];
@@ -108,12 +109,12 @@ export default createStore({
 
           commit("setUploadBeatComplete", true)
           resolve()
-          console.log("Tx successfully sent!");
+          logger.log("Tx successfully sent!");
         };
       });
     },
     async populateCursors ({ commit }, data) {
-      console.log("storing cursor");
+      logger.log("storing cursor");
       commit("setTotalPages", data[0]);
       commit("setCursors", data[1]);
       commit("setTotalBeats", data[2]);

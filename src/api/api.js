@@ -1,4 +1,5 @@
 import store from "../store/store"
+import logger from "../utilities/logger"
 const Ar = require('arweave').default
 const ArDB = require('ardb').default
 const ArGql = require('ar-gql')
@@ -52,7 +53,7 @@ const API = {
       .appName("BeatLedger")
       .findAll()
       .then((txs) => {
-        console.log(txs.length);
+        logger.log(txs.length);
       });
   },
 
@@ -79,7 +80,7 @@ const API = {
     await ArGql
       .all(query)
       .then((res) => {
-        // console.log(res);
+        // logger.log(res);
         let numBeatsPerPage = 5
         var cursors = []
         var totalPages = Math.ceil(res.length / numBeatsPerPage);
@@ -94,7 +95,7 @@ const API = {
           // let txid = entry.node.id
           let cursor = entry.cursor
           cursors.push(cursor)
-          // console.log(`${i}\ntxid: ${txid}\ncursor: ${cursor}\n`)
+          // logger.log(`${i}\ntxid: ${txid}\ncursor: ${cursor}\n`)
         }
 
         store.dispatch("populateCursors", [totalPages, cursors, totalBeats])
@@ -103,7 +104,7 @@ const API = {
 
   // query beats with cursors from ArGql
   async queryBeatsWithCursor (cursor) {
-    console.log(`cursor to query: ${cursor}`);
+    logger.log(`cursor to query: ${cursor}`);
     let query = `query {
       transactions(
         sort: HEIGHT_DESC,
@@ -127,7 +128,7 @@ const API = {
       .run(query)
       .then((res) => {
         for (var entry of res.data.transactions.edges) {
-          console.log(entry);
+          logger.log(entry);
         }
       });
   },
@@ -158,7 +159,7 @@ const API = {
         }
         return new_beats;
       })
-      .catch(err => { console.log(err) });
+      .catch(err => { logger.log(err) });
 
     return new Promise((resolve) => {
       Promise.all(
@@ -232,7 +233,7 @@ const API = {
 
   async uploadBeatTest (beat_name, note, arrayBuffer) {
     // var arrayBuffer = fr.result;
-    console.log(arrayBuffer);
+    logger.log(arrayBuffer);
 
     var wallet = await ar.wallets.generate();
 
@@ -256,12 +257,12 @@ const API = {
 
     while (!uploader.isComplete) {
       await uploader.uploadChunk();
-      console.log(
+      logger.log(
         `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
       );
     }
 
-    console.log("Tx successfully sent!");
+    logger.log("Tx successfully sent!");
   },
 
   async uploadBeatsTestMany (arrayBuffer) {
@@ -290,18 +291,18 @@ const API = {
 
       while (!uploader.isComplete) {
         await uploader.uploadChunk();
-        console.log(
+        logger.log(
           `${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`
         );
       }
     }
 
-    console.log("Tx successfully sent!");
+    logger.log("Tx successfully sent!");
   },
 
   async generate () {
     ar.wallets.generate().then(async (key) => {
-      console.log(JSON.stringify(key));
+      logger.log(JSON.stringify(key));
       var public_key = await ar.wallets.getAddress(key);
       var filename = "arweave-key-" + public_key + ".json";
       var file = new Blob([JSON.stringify(key)], { type: JSON });
