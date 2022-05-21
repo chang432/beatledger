@@ -78,18 +78,25 @@ export default {
     },
     async defaultLoad() {
       this.showLoader = true;
-      this.beats = await API.queryAllBeatsArdb();
 
-      await API.queryCursors();
+      if (!logger.isProductionQuery) {
+        // test query
+        logger.log("test beats query starting", "header");
+        this.beats = await API.queryAllBeatsArdb();
+      } else {
+        // real query
+        logger.log("real beats query starting", "header");
+        await API.queryCursors();
 
-      this.total_pages = this.$store.state.totalPages;
-      let cursors = this.$store.state.cursors;
+        this.total_pages = this.$store.state.totalPages;
+        let cursors = this.$store.state.cursors;
 
-      await API.queryBeatsWithCursor(cursors[this.page - 1]);
+        await API.queryBeatsWithCursor(cursors[this.page - 1]);
 
-      logger.log("total beats: " + this.$store.state.totalBeats);
-      logger.log("Website successfully refreshed");
+        logger.log("total beats: ", this.$store.state.totalBeats);
+      }
 
+      logger.log("query finished", "header");
       this.showLoader = false;
     },
     playMp3Logic() {
