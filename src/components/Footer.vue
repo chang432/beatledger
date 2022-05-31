@@ -1,12 +1,19 @@
 <template>
   <footer>
-    <p>Copyright &copy; 2022</p>
+    <div>Copyright &copy; 2022</div>
   </footer>
 </template>
 
-<style scoped>
+<style>
 footer {
-  margin-top: 30px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  color: black;
   text-align: center;
+  padding: 20px;
+
 }
 </style>

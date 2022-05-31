@@ -32,17 +32,18 @@
       </div>
       <input type="submit" value="submit" />
     </form>
-    <button @click="uploadBeatsTestMany">Multi Upload</button>
+    <v-btn block @click="uploadBeatsTestMany">Multi Upload</v-btn>
     <audio id="audio_player1" />
     <button @click="testQueryBeatsWithCursors">query beat with cursors</button>
-    <v-pagination
+    
+  </div>
+  <v-pagination
       v-model="page"
       :pages="total_pages"
       :range-size="1"
       active-color="#ffffff"
       @update:modelValue="pageChangeTrigger"
     />
-  </div>
 </template>
 
 <script>
@@ -186,6 +187,20 @@ export default {
 </script>
 
 <style scoped>
+*{
+  margin:10px;
+  box-sizing: border-box;
+
+}
+.main{
+  flex-grow: 1;
+  position: relative;
+}
+
+.add-form{
+  margin: 10px;
+  height:100%
+}
 .header_label {
   display: flex;
   margin: 5px 10px;
@@ -204,5 +219,13 @@ export default {
   justify-content: center;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.Pagination{
+  margin-left: 10px;
+  /* bottom: 10%; */
+  left: 0;
+  background-color: black;
+  position:fixed; 
+  top: 87.5%
 }
 </style>

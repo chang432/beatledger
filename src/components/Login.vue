@@ -89,7 +89,8 @@ export default {
   padding: 8px 0px;
 }
 .login_btn {
-  background-color: #1f1f1f;
+  background-color: transparent;
+  color:black;
   margin-right: 15px;
 }
 .outside_div {

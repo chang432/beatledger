@@ -1,14 +1,15 @@
 <template>
   <div class="main header">
-    <div class="sub_header">
+    <div class="logo">
       <img class="beat_logo" src="../assets/beat_logo.png" />
-      <router-link to="/about" class="btn">About</router-link>
+      
     </div>
-    <div class="sub_header center_header">
-      <input class="input_field" type="Search" v-model="searchContent" />
+    <div class="center_header">
+      <input class="input_field" type="Search" v-model="searchContent" placeholder="Search..." />
       <p @click="startChain" class="btn">{{ searchToggle }}</p>
     </div>
-    <div class="sub_header center_header">
+    <div class="sub_header">
+      <router-link to="/about" class="btn">About</router-link>
       <template v-if="isLoggedInValue">
         <UploadBeat :keyFile="keyFile" />
         <p class="wallet_address" id="keyfileName">{{ keyFile.public_key }}</p>
@@ -107,24 +108,32 @@ export default {
 <style scoped>
 .header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  height: 120px;
+  height: 80px;
+  background-color: white;
 }
 .sub_header {
   display: flex;
   align-items: flex-end;
-  margin-bottom: 22px;
+  padding:10px;
+  gap: 4rem;
+
 }
 .center_header {
   align-items: center;
+  padding: 2rem 4rem;
+  display: flex;
+  width:600px
+
+
 }
 .beat_logo {
-  width: 350px;
-  height: 60px;
-  margin-bottom: 5.5px;
+  width: 250px;
+  height: 40px;
   margin-left: 30px;
   margin-right: 30px;
+  align-items: center;
 
   /* code to fix blurriness from scaling down image */
   image-rendering: -moz-crisp-edges; /* Firefox */
@@ -137,6 +146,9 @@ export default {
   padding: 2px 2px;
   min-width: 100%;
   margin-right: 8px;
+  width:200px;
+  height:35px;
+  text-size-adjust: auto;
 }
 .input_field:focus {
   outline: none;
@@ -156,7 +168,14 @@ export default {
 .wallet_address:focus {
   outline: none;
 }
+
 .logout_btn {
   margin-right: 15px;
+  background: transparent;
+}
+.btn {
+  display:flex;
+  color:black;
+  
 }
 </style>

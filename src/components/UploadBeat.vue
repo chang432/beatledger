@@ -4,7 +4,7 @@
 
     <Teleport to="body">
       <div v-if="open" class="upload_div">
-        <form @submit="sendTxWithText">
+        <form @submit="sendTxWithText" class="upload_div_content">
           <label class="text" for="fname">Beat Name</label>
           <input type="text" v-model="beat_name" id="fname" name="firstname" />
 
@@ -173,7 +173,8 @@ input[type="submit"]:hover {
   padding: 8px 0px;
 }
 .upload_beat_btn {
-  background-color: #1f1f1f;
+  background-color: transparent;
+  color:black;
   margin-right: 8px;
 }
 .outside_div {
@@ -183,5 +184,8 @@ input[type="submit"]:hover {
   top: 0px;
   left: 0px;
   z-index: 998;
+}
+.upload_div_content{
+  margin:15px;
 }
 </style>
