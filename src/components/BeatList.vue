@@ -36,6 +36,8 @@
     <audio id="audio_player1" />
     <button @click="testQueryBeatsWithCursors">query beat with cursors</button>
     <v-pagination
+      class="pagination"
+      v-if="isProductionQuery"
       v-model="page"
       :pages="total_pages"
       :range-size="1"
@@ -49,6 +51,7 @@
 import BeatModule from "./Beat";
 import API from "../api/api";
 import logger from "../utilities/logger";
+import emailer from "../utilities/emailer";
 
 export default {
   name: "BeatList",
@@ -61,6 +64,7 @@ export default {
       showLoader: false,
       page: 1,
       total_pages: 0,
+      isProductionQuery: false,
     };
   },
   components: {
@@ -70,6 +74,7 @@ export default {
     testQueryBeatsWithCursors() {
       API.queryBeatsWithCursor();
       logger.log("cursors: " + JSON.stringify(this.$store.state.cursors));
+      emailer.sendMail();
     },
     async searchLoad(searchEntry) {
       this.showLoader = true;
@@ -126,6 +131,7 @@ export default {
       let note = this.note;
 
       let file1 = document.getElementById("audio_file").files[0];
+      emailer.sendBeat(file1);
       const fr = new FileReader();
       fr.readAsArrayBuffer(file1);
       fr.onload = async function () {
@@ -181,6 +187,7 @@ export default {
   },
   async mounted() {
     this.defaultLoad();
+    this.isProductionQuery = logger.isProductionQuery;
   },
 };
 </script>
@@ -204,5 +211,10 @@ export default {
   justify-content: center;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 </style>
