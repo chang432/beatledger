@@ -51,7 +51,6 @@
 import BeatModule from "./Beat";
 import API from "../api/api";
 import logger from "../utilities/logger";
-import emailer from "../utilities/emailer";
 
 export default {
   name: "BeatList",
@@ -74,7 +73,6 @@ export default {
     testQueryBeatsWithCursors() {
       API.queryBeatsWithCursor();
       logger.log("cursors: " + JSON.stringify(this.$store.state.cursors));
-      emailer.sendMail();
     },
     async searchLoad(searchEntry) {
       this.showLoader = true;
@@ -131,7 +129,6 @@ export default {
       let note = this.note;
 
       let file1 = document.getElementById("audio_file").files[0];
-      emailer.sendBeat(file1);
       const fr = new FileReader();
       fr.readAsArrayBuffer(file1);
       fr.onload = async function () {
